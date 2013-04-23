@@ -1,5 +1,4 @@
 
-library(rjson)
 library(XML)
 
 geocode <- function(place) {
