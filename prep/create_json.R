@@ -8,12 +8,10 @@ city.list <- list()
 
 for (i in 1:n.cities) {
   city <- cities$City[i]
-  country <- cities$Country[i]
   latitude <- cities$Latitude[i]
   longitude <- cities$Longitude[i]
   zoom <- cities$Zoom[i]
-  lst <- list(city=city, country=country,
-              latitude=latitude, longitude=longitude, zoom=zoom)
+  lst <- list(city=city, latitude=latitude, longitude=longitude, zoom=zoom)
   city.list[[i]] <- lst
 }
 

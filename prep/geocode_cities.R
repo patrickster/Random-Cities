@@ -27,8 +27,7 @@ for (i in 1:n.cities) {
   if (is.na(cities$Latitude[i])) {
     city <- cities$City[i]
     print(city)
-    country <- cities$Country[i]
-    coords <- geocode(paste(city, ", ", country, sep=""))
+    coords <- geocode(city, sep=""))
     print(coords)
     cities$Latitude[i] <- coords[["lat"]]
     cities$Longitude[i] <- coords[["lng"]]
