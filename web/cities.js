@@ -30,24 +30,26 @@ function initializeMap() {
     initLng = initCity.longitude,
     initZoom = initCity.zoom;
   
-  currentLocation = initCity.city + ', ' + initCity.country;
+  currentLocation = initCity.city;
   
   var mapOptions = {
     center: new google.maps.LatLng(initLat, initLng),
     zoom: initZoom,
     mapTypeId: google.maps.MapTypeId.SATELLITE,
 	  mapTypeControl: false,
-    keyboardShortcuts: false
+    keyboardShortcuts: false,
+    panControl: false,
+    zoomControl: false,
+    streetViewControl: false
   };
   
-  map = new google.maps.Map(document.getElementById('map_canvas'),
+  map = new google.maps.Map(document.getElementById('map-canvas'),
 				  mapOptions);
 
   $('#center').text('(' + initLat + ', ' + initLng + ')');
   $('#zoom').text(initZoom);
   $('#instructions').css('visibility', 'visible');
 
-  // $('#instructions').addClass('hidden');
   // google.maps.event.addListener(map, 'zoom_changed', function() {
 	 //   var zoomLevel = map.getZoom();
 	 //   $('#zoom').text(zoomLevel);
@@ -64,11 +66,11 @@ function initializeMap() {
 function initialize() {
 
   $.getJSON('cities.json', function(response) {
-	cities = response;
-	numCities = cities.cities.length;
+	  cities = response;
+	  numCities = cities.cities.length;
     maxIndex = numCities - 1;
     randomizeDisplayOrder(numCities);
-	initializeMap();
+	  initializeMap();
   });
 
   $('#location').hover(function() {
@@ -77,12 +79,24 @@ function initialize() {
     $(this).html('Where is this?');
   });  
 
+  // Arrow key interactions
+  document.onkeydown = function(e) {
+    e = e || window.event;
+    switch (e.keyCode) {
+      case 37:
+        moveToPreviousCity();
+        break;
+      case 39:
+        moveToNextCity();
+        break;
+    }
+  };
 }
 
 
 function changeCity() {
   var currentCity = cities.cities[displayOrder[currentIndex]];
-  currentLocation = currentCity.city + ', ' + currentCity.country; 
+  currentLocation = currentCity.city;
   var newCenter = new google.maps.LatLng(currentCity.latitude, currentCity.longitude);
   map.setCenter(newCenter);
   map.setZoom(currentCity.zoom);
@@ -108,24 +122,14 @@ function moveToNextCity() {
 }
 
 
-// Arrow key interactions
-document.onkeydown = function(e) {
-  e = e || window.event;
-  switch (e.keyCode) {
-    case 37:
-      moveToPreviousCity();
-      break;
-    case 39:
-      moveToNextCity();
-      break;
-  }
-};
+$(window).load(function () {
+  initialize();
+});
 
 
 // Fade out instructions div after map is loaded
 $('#map').ready(function() {   
   $('#instructions').delay(4000).fadeOut(2000, 'linear', queue=true);
 });
-
 
 
